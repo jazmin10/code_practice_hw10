@@ -8,7 +8,7 @@
 	var passedArgs = [];
 	var command = "";
 
-	// Twitter keys and tokens
+	// Twitter keys and tokens information
 	var client = new Twitter({
 		consumer_key: secretKeys.twitterKeys.consumer_key,
 		consumer_secret: secretKeys.twitterKeys.consumer_secret,
@@ -16,8 +16,15 @@
 		access_token_secret: secretKeys.twitterKeys.access_token_secret
 	});
 
+	// Spotify id and secret information
+	var spotify = new Spotify({
+		id: secretKeys.spotifyKeys.client_id,
+		secret: secretKeys.spotifyKeys.client_secret
+	});
+
 // ========== FUNCTIONS ==========
 
+	// Grabs tweets
 	function tweetInfo() {
 		// query url we will be using for our request
 		var twitterURL = "statuses/user_timeline";
@@ -30,7 +37,7 @@
 			count: 20
 		};
 
-		// Make api request
+		// Make api request and then...
 		client.get(twitterURL, params, function(twitterErr, tweet, response) {
 			if (twitterErr) {
 				console.log("Something went wrong");
@@ -51,6 +58,54 @@
 		console.log(tweetInfo.text);
 	}
 
+	// Grabs song information
+	function songInfo() {
+
+		// Grab arguments (besides node and file name) and turn them into a string
+		var song = passedArgs.slice(1).join(" ");
+
+		// If no song is given, then search for "The sign"
+		if (song === "") {
+			song = "The sign";
+		}
+
+		// Object holds parameters that will be used for the api request
+		var queryObj = {
+			type: "track",
+			query: song,
+			limit: 5
+		};
+
+		// Make api request and then...
+		spotify.search(queryObj).then(function(response) {
+
+			// Holds top 5 search results
+			var results = response.tracks.items;
+
+			// Loop through the results and display each song result
+			for (var i = 0; i < results.length; i++) {
+
+				// Since we want to say "Search result #1-5"
+				var rank = i + 1;
+				console.log("SEARCH RESULT #" + rank);
+
+				displaySongInfo(results[i]);
+			}
+
+		}).catch(function(spotifyErr) {
+			console.log(spotifyErr);
+		});
+	}
+
+	// Displays a song's information
+	function displaySongInfo(song) {
+		console.log("Artist: " + song.artists[0].name);
+		console.log("Song: " + song.name);
+		console.log("Preview: " + song.album.external_urls.spotify);
+		console.log("Album name: " + song.album.name);
+		console.log("------------");
+	}
+
 // ========== MAIN PROCESSES ==========
 
 // Store passed arguments by making an array of each arg, except node and file name
@@ -68,7 +123,9 @@ switch (command) {
 		tweetInfo();
 		break;
 	case "spotify-this-song":
-		console.log("grab song info");
+		console.log("TOP 5 SEARCH RESULTS");
+		console.log("------------");
+		songInfo();
 		break;
 	case "movie-this":
 		console.log("grab movie info");
