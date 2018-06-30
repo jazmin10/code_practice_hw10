@@ -112,8 +112,7 @@
 	// Grab movie's information
 	function movieInfo(movieSelected) {
 
-		// Store movie entered by user by removing node, file name, 
-		// and command. Then turning arr into a string with "+" in between
+		// Store movie passed to the function
 		var movie = movieSelected;
 
 		if (movie === "") {
@@ -208,15 +207,19 @@ switch (command) {
 		console.log("TOP 5 SEARCH RESULTS");
 		console.log("------------");
 
+		// Store song entered by removing command and turning arr into a string
 		var songEntered = passedArgs.slice(1).join(" ");
 		songInfo(songEntered);
 		break;
+	// If the user entered movie-this, display movie information
 	case "movie-this":
 		console.log("MOVIE SEARCH RESULTS:");
 
+		// Store movie entered by removing command and turning arr into a string
 		var movieEntered = passedArgs.slice(1).join("+");
 		movieInfo(movieEntered);
 		break;
+	// If the user entered do-what-it-says, perform random command
 	case "do-what-it-says":
 		randomCommand();
 		break;
