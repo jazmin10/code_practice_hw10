@@ -61,11 +61,10 @@
 	}
 
 	// Grabs song information
-	function songInfo() {
+	function songInfo(songSelected) {
 
-		// Store song entered by user by removing node,
-		// file name, and command. Then turning arr to string
-		var song = passedArgs.slice(1).join(" ");
+		// Store song passed to the function
+		var song = songSelected;
 
 		// If no song is given, then search for "The sign"
 		if (song === "") {
@@ -167,10 +166,13 @@ switch (command) {
 		console.log("These are the last 20 tweets: ");
 		tweetInfo();
 		break;
+	// If the user entered spotify-this-song, display the top 5 song results
 	case "spotify-this-song":
 		console.log("TOP 5 SEARCH RESULTS");
 		console.log("------------");
-		songInfo();
+
+		var songEntered = passedArgs.slice(1).join(" ");
+		songInfo(songEntered);
 		break;
 	case "movie-this":
 		console.log("MOVIE SEARCH RESULTS:");
