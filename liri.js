@@ -4,6 +4,7 @@
 	var Twitter = require("twitter");
 	var Spotify = require("node-spotify-api");
 	var secretKeys = require("./keys.js");
+	var fs = require("fs");
 
 	var passedArgs = [];
 	var command = "";
@@ -148,7 +149,42 @@
 		console.log("AWARDS: " + movieResults.Awards);
 	}
 
-	// Reads
+	// Reads random.txt and performs the random command in the file
+	function randomCommand() {
+	
+		// Reads data stored in random.txt
+		fs.readFile("./random.txt", "utf8", function(readErr, data) {
+			// Stop execution is there was a reading error
+			if (readErr) {
+				console.log("Oops! something went wrong");
+				return;
+			}
+
+			// Turn string into an array and separate data wherever there is a comma
+			var dataArr = data.split(",");
+
+			// Store the random command
+			var randomAction = dataArr[0];
+
+			// Store the rest of data in random.txt as a string
+			var randomValue = dataArr.slice(1).join(" ");
+
+			// Execute the random command in random.txt
+			switch (randomAction) {
+				case "my-tweets":
+					tweetInfo();
+					break;
+				case "spotify-this-song":
+					songInfo(randomValue);
+					break;
+				case "movie-this":
+					break;
+				default:
+					console.log("A wrong command was writtin in random.txt");
+			}
+
+		});
+	}
 
 // ========== MAIN PROCESSES ==========
 
@@ -179,7 +215,7 @@ switch (command) {
 		movieInfo();
 		break;
 	case "do-what-it-says":
-		console.log("perform random thing");
+		randomCommand();
 		break;
 	default:
 		console.log("oh no, try again!");
