@@ -110,11 +110,11 @@
 	}
 
 	// Grab movie's information
-	function movieInfo() {
+	function movieInfo(movieSelected) {
 
 		// Store movie entered by user by removing node, file name, 
 		// and command. Then turning arr into a string with "+" in between
-		var movie = passedArgs.slice(1).join("+");
+		var movie = movieSelected;
 
 		if (movie === "") {
 			movie = "mr+nobody";
@@ -178,6 +178,7 @@
 					songInfo(randomValue);
 					break;
 				case "movie-this":
+					movieInfo(randomValue.join("+"));
 					break;
 				default:
 					console.log("A wrong command was writtin in random.txt");
@@ -212,7 +213,9 @@ switch (command) {
 		break;
 	case "movie-this":
 		console.log("MOVIE SEARCH RESULTS:");
-		movieInfo();
+
+		var movieEntered = passedArgs.slice(1).join("+");
+		movieInfo(movieEntered);
 		break;
 	case "do-what-it-says":
 		randomCommand();
