@@ -39,6 +39,8 @@
 
 		// Make api request and then...
 		client.get(twitterURL, params, function(twitterErr, tweet, response) {
+			
+			// if request is not succesful
 			if (twitterErr) {
 				console.log("Something went wrong");
 				return;
@@ -61,7 +63,8 @@
 	// Grabs song information
 	function songInfo() {
 
-		// Grab arguments (besides node and file name) and turn them into a string
+		// Store song entered by user by removing node,
+		// file name, and command. Then turning arr to string
 		var song = passedArgs.slice(1).join(" ");
 
 		// If no song is given, then search for "The sign"
@@ -106,6 +109,48 @@
 		console.log("------------");
 	}
 
+	// Grab movie's information
+	function movieInfo() {
+
+		// Store movie entered by user by removing node, file name, 
+		// and command. Then turning arr into a string with "+" in between
+		var movie = passedArgs.slice(1).join("+");
+
+		if (movie === "") {
+			movie = "mr+nobody";
+		}
+		
+		var queryURL = "http://www.omdbapi.com/?i=tt3896198&apikey=4b1d9a31&";
+		queryURL += "plot=short&r=json&t=" + movie;
+
+		request(queryURL, function(movieErr, response, body) {
+
+			// If request is not successful...
+			if (movieErr || response.statusCode !== 200) {
+				console.log("Oops! something went wrong");
+				return;
+			}
+
+			// Display movie information (body is a string which is why we JSON.parse it)
+			displayMovieInfo(JSON.parse(body));
+
+		});
+	}
+
+	// Displays movie's information
+	function displayMovieInfo(movieResults) {
+		console.log("TITLE: " + movieResults.Title);
+		console.log("YEAR: " + movieResults.Year);
+		console.log("IMDB RATING: " + movieResults.Ratings[0].Value);
+		console.log("COUNTRY WHERE FILM WAS PRODUCED: " + movieResults.Country);
+		console.log("LANGUAGE: " + movieResults.Language);
+		console.log("PLOT: " + movieResults.Plot);
+		console.log("ACTORS: " + movieResults.Actors);
+		console.log("AWARDS: " + movieResults.Awards);
+	}
+
+	// Reads
+
 // ========== MAIN PROCESSES ==========
 
 // Store passed arguments by making an array of each arg, except node and file name
@@ -128,7 +173,8 @@ switch (command) {
 		songInfo();
 		break;
 	case "movie-this":
-		console.log("grab movie info");
+		console.log("MOVIE SEARCH RESULTS:");
+		movieInfo();
 		break;
 	case "do-what-it-says":
 		console.log("perform random thing");
